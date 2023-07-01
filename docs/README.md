@@ -493,12 +493,4 @@ Now, you will connect Power BI Desktop to AWS Redshift data, create a dashborad 
 
 
 
-## Contributing and Feedback
-Any ideas or feedback about this repository?. Help me to improve it.
 
-## Authors
-- Created by <a href="https://www.linkedin.com/in/ramsescoraspe"><strong>Ramses Alexander Coraspe Valdez</strong></a>
-- Created on 2021
-
-## License
-This project is licensed under the terms of the Apache License.
