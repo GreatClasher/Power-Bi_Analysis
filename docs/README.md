@@ -1,4 +1,4 @@
-# Building an ETL pipeline with Apache Airflow and Visualizing AWS Redshift data using Microsoft Power BI
+# Uber EDA
 
 ### Check the article here:  <a href="https://aws.plainenglish.io/uber-expenses-tracking-with-airflow-redshift-powerbi-27688a686f60">Building an ETL data pipeline with Apache Airflow and Visualizing AWS Redshift data using Microsoft Power BI</a>
 
@@ -483,13 +483,6 @@ Now, you will connect Power BI Desktop to AWS Redshift data, create a dashborad 
 
 
 ![powerBi_uber_services6](https://user-images.githubusercontent.com/8701464/115949563-97e22b00-a49b-11eb-92ab-5459b4469f5f.gif)
-
-
-
-   - After you create the dashboards in Power BI Desktop, you will need to publish the dataset and dashboards to Power BI to share it with others or consume it from a mobile device.
-   - In Power BI Desktop, choose Publish
-   - Choose My workspace.
-   - Choose Select.
 
 
 
