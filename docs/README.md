@@ -31,20 +31,10 @@ Once the details for each type of receipt have been detected, it is easy to know
 ![alt text](https://wittline.github.io/uber-expenses-tracking/Images/dag.PNG)
 
 
-## Visualizing AWS Redshift data using Microsoft Power BI
 
-<p align="justify">
-Now, you will connect Power BI Desktop to AWS Redshift data, create a dashborad for Uber Eats and Uber Rides, publish the report to Power BI service, and you can consume the report from your mobile device as well.
  
 </p>
 
-- Launch Power BI Desktop
-- Sign in to the Service with your Power BI credentials
-- Select Home -> Get Data -> More > Database -> Amazon Redshift
-- Click Connect
-- On the next screen, provide the following values: Server, Database and Data Connectivity Mode (Import)
-- Build your dashboards, in this case there are already two dashboards with several reports on it and you can use the same example below on the file **report_receipts.pbix**
-- Update your redshift cluster, it will change
 
 
 ![powerBi_uber_services6](https://user-images.githubusercontent.com/8701464/115949563-97e22b00-a49b-11eb-92ab-5459b4469f5f.gif)
