@@ -1,11 +1,8 @@
-# Uber EDA
+# EDA
 
-<p align="justify">
-Have you heard phrases like <strong>Hungry? You're in the right place</strong> or <strong>Request a trip, hop in, and relax.</strong> ? Both phrases are very common in our daily lives, they represent the emblems of the two most important businesses with <a href="https://qz.com/1889602/uber-q2-2020-earnings-eats-is-now-bigger-than-rides/"> millionaire revenues </a> from UBER. <strong>Have you ever thought about how much money you spend on these services?</strong> The goal of this project is to track the expenses of <a href="https://www.uber.com/">Uber Rides</a> and <a  href="https://www.ubereats.com/">Uber Eats</a> through a data Engineering processes using technologies such as <a href="https://airflow.apache.org/">Apache Airflow</a>, <a href="https://aws.amazon.com/es/redshift/">AWS Redshift</a> and <a href="https://powerbi.microsoft.com/es-es/">Power BI</a>. Keep reading this article, I will show you a quick and easy way to automate everything step by step.
- 
-</p>
 
-# Architecture - Uber expenses tracking
+
+# Architecture -expenses tracking
 
 ![alt text](https://wittline.github.io/uber-expenses-tracking/Images/architecture.png)
 
@@ -18,15 +15,6 @@ Every time an Ubers Eat or Uber Rides service has ended, you will receive a paym
 </p>
 
 
-### Uber Rides receipt example
-
-![alt text](https://wittline.github.io/uber-expenses-tracking/Images/rides_receipt_example.png)
- 
-
-### Uber Eats receipt example
-
-![alt text](https://wittline.github.io/uber-expenses-tracking/Images/eats_receipt_example.png)
-
 
 ## Data modelling
 
@@ -37,181 +25,6 @@ Once the details for each type of receipt have been detected, it is easy to know
 
  
 ![alt text](https://wittline.github.io/uber-expenses-tracking/Images/dwh_schema.jpg)
-
-
-
-## Infrastructure as Code (IaC) in AWS
-
-<p align="justify"> 
-The aim of this section is to create a Redshift cluster on AWS and keep it available for use by the airflow DAG. In addition to preparing the infrastructure, the file <strong>AWS-IAC-IAM-EC2-S3-Redshift.ipynb</strong> will help you to have an alternative staging zone in S3 as well.
-
-Below we list the different steps and the things carried out in this file:
-
-</p>
-
-- Install <a href="https://www.stanleyulili.com/git/how-to-install-git-bash-on-windows/">git-bash for windows</a>, once installed , open **git bash** and download this repository, this will download the **dags** folder and the **docker-compose.yaml** file, and other files needed.
-
-``` 
-ramse@DESKTOP-K6K6E5A MINGW64 /c
-$ git clone https://github.com/Wittline/uber-expenses-tracking.git
-```
-- Second, create a new User in AWS with *AdministratorAccess** and get your security credentials
-- Go to this url: <a href="https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-welcome.html ">AWS CLI </a> and configure your AWS Credentials in your local machine
-- Setup local environment with Google Colab:
-  - Go to CMD and put: 
-      ```
-      C:\>jupyter notebook --NotebookApp.allow_origin='https://colab.research.google.com' --port=8888 --NotebookApp.port_retries=0
-      ```
-  - After the execution of the last command, copy the localhost url, you will need it for colab
-  - Go to <a href="https://colab.research.google.com/"> Google Colab </a>
-  - Create a new Notebook
-  - Go to -> Connect -> "Connect to local runtime" -> Paste the url copied from the last step and put it in Backend URL -> connect
-  - Upload the file ***AWS-IAC-IAM-EC2-S3-Redshift.ipynb***, and use it into your colab local env: 
-    - Create the required S3 buckets
-       - uber-tracking-expenses-bucket-s3
-       - airflow-runs-receipts
-    - Move Uber receipts from your local computer to S3
-    - Loading params from the dwh.cfg file
-    - Creating clients for IAM, EC2 and Redshift cluster
-    - Creating the IAM Role that makes Redshift able to access to S3 buckets **ReadOnly**
-    - Creating Redshift cluster
-    - Check cluster details until status show Available
-    - Showing Redshift cluster endpoint and role ARN
-    - Incoming TCP port to access to the cluster ednpoint
-    - Checking the connection to the Redshift cluster
-    - Cleaning and deleting the resources
-
-
-
-
-
-## Building an ETL data pipeline with Apache Airflow
-
-<p align="justify">
-This project requires that you have prior knowledge of these technologies, however my <a href="https://youtu.be/LlV0GxjNdVw">YouTube</a>  video could help you in case you do not have experience with the tools, in this way you can mount the project without the need of previous experience. I will not delve into explaining what Apache Airflow is, this section will focus on explaining the process of data integration of the UBER receipts until reaching a common data source, the final data source is the data model that was designed in the previous section.
-
-</p>
-
-### Docker environment
-
-<p align="justify">
-Amazon AWS has an answer to the need of data engineers who love Apache Airflow in the cloud, here you can read more about it: <a href="https://aws.amazon.com/es/blogs/aws/introducing-amazon-managed-workflows-for-apache-airflow-mwaa/">Introducing Amazon Managed Workflows for Apache Airflow (MWAA)</a>, However this project uses a <a href="https://www.docker.com/">Docker</a> container, follow the steps below in order to accelerate the deployment of this project using docker:
-
-</p>
-
-- Install <a href="https://docs.docker.com/docker-for-windows/install/">Docker Desktop on Windows</a>, it will install **docker compose** as well, docker compose will alow you to run multiple containers applications, Apache airflow has three main components: **metadata database**, **scheduler** and **webserver**, in this case we will use a celery executor too.
-
-- Once all the files needed were downloaded from the repository , Let's run everything we will use the git bash tool again, go to the folder **Uber-expenses-tracking** we will run docker compose command
-
-
-```linux 
-ramse@DESKTOP-K6K6E5A MINGW64 /c
-$ cd Uber-expenses-tracking
-
-ramse@DESKTOP-K6K6E5A MINGW64 /c/Uber-expenses-tracking
-$ cd code
-```
-
-```linux 
-ramse@DESKTOP-K6K6E5A MINGW64 /c/Uber-expenses-tracking/code
-$ echo -e "AIRFLOW_UID=$(id -u)\nAIRFLOW_GID=0" > .env
-```
-
-```linux
-ramse@DESKTOP-K6K6E5A MINGW64 /c/Uber-expenses-tracking/code
-$ docker-compose up airflow-init
-```
-
-```linux 
-$ docker-compose up
-```
-
-<p align="justify">
-Ready!!!!, everything is up and running, the next thing to do is go to your browser and search <a href="http://localhost:8080/">http://localhost:8080</a>  this will call your webserver and would open your AIRFLOW GUI, for this example the <strong>user</strong> and <strong>password</strong> is "airflow", you can change it in your <strong>.yaml</strong> file.
-
-</p>
-
-There is a couple of thing to configure to ensure the successful execution of your DAG:
-
-- Once inside your AIRFLOW GUI, In the header menu -> Admin -> Variables, Import the variables needed, they are located into the variables folder in the repository downloaded, import the **variables.json** file
-
-
- 
-![alt text](https://wittline.github.io/uber-expenses-tracking/Images/variables.png)
-
-
-- Now go to Admin -> Connections and put the Connections needed, you AWS credentials and Your Redshift credentials
-
- 
-![alt text](https://wittline.github.io/uber-expenses-tracking/Images/connections.png)
-
-
-### Running DAG
-
-- Open a new git-bash console and put the below command, it will show you a list of containers with their ids 
-
-```linux
-$ docker ps
-```
-
-- The scheduler are putting the dags for running, so, choose the container id related with the scheduler and execute the command below, it will execute the dags
-
-
-```linux
-$ docker exec 514e3077fafa airflow dags trigger Uber_tracking_expenses
-```
-
-- The other way for execute dags is using the GUI, which is easier to understand and manage
-
-
-### DAG Details
-
-<p align="justify">
-The DAG is made up of several important tasks, but I will only explain a brief summary  of what it does:
-
-</p>
-
-
-
-
-<p align="justify"> 
-<ul>
-<li><p align="justify">At the beginning, the task called <strong>Start_UBER_Business</strong> is separating the Uber Eats receipts from the Uber rides receipts found in the S3 bucket <strong>uber-tracking-expenses-bucket-s3</strong> in the folder <strong>unprocessed_receipts</strong>, both groups of receipts will be processed in parallel by the tasks <strong>rides_receipts_to_s3_task</strong> and <strong>eats_receipts_to_s3_task</strong></p>
-</li>
-
-<li>
- <p align="justify">The goal of these two tasks <strong>rides_receipts_to_s3_task</strong> and <strong>eats_receipts_to_s3_task</strong> that are running in parallel, is to condense in a single file all processed receipts of each kind eats and rides, the final datasets will be placed in the bucket <strong>airflow-runs-receipts</strong>, under the <strong>/rides</strong> and <strong>/eats</strong> folders as the case may be, the files are:</p>
- 
-<ul>
- <li><p align="justify">eats_receipts.csv: contains the information of all the receipts found for UBER Eats.</p></li>
- <li><p align="justify">items_eats_receipts.csv: contains information of all the products involved in the purchase.</p></li>
- <li><p align="justify">rides_receipts.csv: contains information on all receipts found for UBER Eats.</p></li>
-</ul>
-    
-</li>
-
-<li><p align="justify">Once the two previous processes are finished, the tasks related to create the necessary objects in redshift are executed, dimension tables, fact tables and staging tables.</p>
-</li>
-<li><p align="justify">Once the tables were created in Redshift, Now the staging tables will be filled. The COPY command is useful for move the .csv files from the S3 bucket to Redshift, there are several benefits of staging data: <a href="https://help.gooddata.com/doc/enterprise/en/data-integration/data-preparation-and-distribution/data-preparation-and-distribution-pipeline/data-pipeline-reference/data-warehouse-reference/how-to-set-up-a-connection-to-data-warehouse/connecting-to-data-warehouse-from-cloudconnect/loading-data-through-cloudconnect-to-data-warehouse/merging-data-using-staging-tables">Merging Data Using Staging Tables</a></p>
- 
- <ul>
- <li><p align="justify">staging_rides</p></li>
- <li><p align="justify">staging_eats</p></li>
- <li><p align="justify">staging_eats_items</p></li>
- </ul>
-    
-</li>
-
-<li>
- <p align="justify">Once all the staging tables were created and filled, now the dimension tables will be filled, as you can see in the file <strong>sql_statements.py</strong> all the necessary dimensions and fact tables for the DWH depend on the information contained in the staging tables. To maintain the consistency of the data, we are filling the dimensions first and then the fact tables, there would be no problem using other way around, because redshift does not validate the foreign keys, <a href="https://www.stitchdata.com/blog/how-redshift-differs-from-postgresql/">this is because redshift is a database which focuses on handling large volumes of data for analytical queries.</a>
- </p>
-</li>
-<li><p align="justify">Once the filling of all the DWH tables is finished, we proceed to validate if there are records in them, it is a good practice to maintain a  <a href="https://arun-karunakaran.medium.com/build-quality-into-extract-transform-and-load-process-c02795ddcc93">data quality check</a> section in your ETL process for data integration. In the end, I deleted the staging tables because they are no longer needed.</p>
-</li>
-</ul>
-</p>
-
-Below is the final DAG for this project:
 
 
  
